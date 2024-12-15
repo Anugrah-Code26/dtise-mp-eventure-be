@@ -30,24 +30,12 @@ public class EventOrganizer {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String email;
-
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 
     @Column
     private String description;
-
-    @Column
-    private String address;
-
-    @Column(name = "phone_number")
-    private Long phoneNumber;
-
-    @Column
-    private String web;
 
     @Column(name = "profile_picture_link")
     private String profilePictureLink;
