@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Setter
 @Getter
@@ -42,14 +46,21 @@ public class User {
     @Column(name = "birthdate", nullable = false, columnDefinition = "TIMESTAMP")
     private OffsetDateTime birthdate;
 
-    @Column(name = "is_organizer",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
-    private Boolean isOrganizer;
-
     @Column(name = "referral_code")
     private String referralCode;
 
+    @Column(name = "referrer_code")
+    private String referrerCode;
+
+    @Column(name = "gender")
+    private String gender;
+
     @Column(name = "profile_picture")
     private String profilePicture;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private OffsetDateTime createdAt;
@@ -75,6 +86,11 @@ public class User {
     protected void onRemove() {
         deletedAt = OffsetDateTime.now();
     }
+
+    public Boolean isOrganizer() {
+        return roles.stream().anyMatch(role -> role.getName().equals("ORGANIZER"));
+    }
+
 }
 
 

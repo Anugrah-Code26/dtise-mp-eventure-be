@@ -1,11 +1,16 @@
 package com.miniproject.eventure.infrastructure.user.dto;
 
+import com.miniproject.eventure.entity.user.Role;
 import com.miniproject.eventure.entity.user.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -28,13 +33,20 @@ public class CreateUserRequestDTO {
     @NotNull
     private boolean isOrganizer;
 
+    @NotNull
+    private OffsetDateTime birthdate;
+
+    private String referrerCode;
+
     public User toEntity(){
         User user = new User();
         user.setFullName(fullName);
         user.setEmail(email);
         user.setPassword(password);
-        user.setIsOrganizer(isOrganizer);
-
+        Set<Role> roles = new HashSet<>();
+        user.setRoles(roles);
+        user.setReferrerCode(referrerCode);
+        user.setBirthdate(birthdate);
         return user;
     }
 
